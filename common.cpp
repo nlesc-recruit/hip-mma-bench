@@ -139,7 +139,13 @@ Benchmark::Benchmark(int argc, const char* argv[]) {
 
   // Print HIP device information
   std::cout << "Device " << device_number << ": " << device_->getName();
-  std::cout << " (" << multiProcessorCount() << "WGPs, ";
+  std::cout << " (" << multiProcessorCount();
+  if (isGfx9())
+    std::cout << "CUs, ";
+  else if (isGfx11())
+    std::cout << "WGPs, ";
+  else
+    std::cout << "units, ";
   std::cout << clockRate() * 1e-6 << " Ghz)" << std::endl;
 
 #if defined(HAVE_PMT)
