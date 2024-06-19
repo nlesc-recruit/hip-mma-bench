@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.17)
-project(cudapeak LANGUAGES CXX HIP)
+project(hip-mma-bench LANGUAGES CXX HIP)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TYPE Release)
@@ -26,7 +26,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(cudawrappers)
 
 option(BUILD_WITH_PMT "Build with Power Measurement Toolkit support" OFF)
-option(BUILD_KERNEL_DEBUG "Build CUDA kernels in debug mode")
+option(BUILD_KERNEL_DEBUG "Build HIP kernels in debug mode")
 
 if(BUILD_WITH_PMT)
   set(PMT_BUILD_NVML ON)

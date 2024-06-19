@@ -130,20 +130,20 @@ Benchmark::Benchmark(int argc, const char* argv[]) {
   benchmark_duration_ = results["benchmark_duration"].as<unsigned>();
 #endif
 
-  // Setup CUDA
+  // Setup HIP
   cu::init();
   device_ = std::make_unique<cu::Device>(device_number);
   context_ =
       std::make_unique<cu::Context>(CU_CTX_SCHED_BLOCKING_SYNC, *device_);
   stream_ = std::make_unique<cu::Stream>();
 
-  // Print CUDA device information
+  // Print HIP device information
   std::cout << "Device " << device_number << ": " << device_->getName();
-  std::cout << " (" << multiProcessorCount() << "SMs, ";
+  std::cout << " (" << multiProcessorCount() << "WGPs, ";
   std::cout << clockRate() * 1e-6 << " Ghz)" << std::endl;
 
 #if defined(HAVE_PMT)
-  pm_ = std::move(pmt::Create("nvidia"));
+  pm_ = std::move(pmt::Create("rocm"));
 #endif
 }
 
