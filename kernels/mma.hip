@@ -47,3 +47,7 @@ __global__ void mma_bf16_16_16_16(void* data) {
 __global__ void mma_f32_16_16_16(void* data) {
  mma_kernel<float, float, 16, 16, 16>((float*)data);
 }
+
+__global__ void mma_f64_16_16_16(void* data) {
+ mma_kernel<double, double, 16, 16, 16>((float*)data);
+}

@@ -4,6 +4,7 @@ __global__ void mma_s8_16_16_16(void* ptr);
 __global__ void mma_f16_16_16_16(void* ptr);
 __global__ void mma_bf16_16_16_16(void* ptr);
 __global__ void mma_f32_16_16_16(void* ptr);
+__global__ void mma_f64_16_16_16(void* ptr);
 
 int main(int argc, const char* argv[]) {
   Benchmark benchmark(argc, argv);
@@ -18,7 +19,7 @@ int main(int argc, const char* argv[]) {
   dim3 grid(nr_thread_blocks);
   dim3 block(32, nr_warps_per_thread_block);
 
-  size_t sizeof_data = nr_warps_per_thread_block * 16 * 16 * sizeof(int);
+  size_t sizeof_data = nr_warps_per_thread_block * 16 * 16 * sizeof(double);
 
   // Amount of work performed
   int nr_iterations = 32768;
@@ -36,10 +37,12 @@ int main(int argc, const char* argv[]) {
                   "mma_f16_16_16_16", gops * (16 * 16 * 16 * 2), gbytes);
     benchmark.run(reinterpret_cast<void*>(&mma_bf16_16_16_16), grid, block,
                   "mma_bf16_16_16_16", gops * (16 * 16 * 16 * 2), gbytes);
-    // F32 is only available on CDNA (gfx9)
+    // F32 and F64 are only available on CDNA (gfx9)
     if (benchmark.isGfx9()) {
         benchmark.run(reinterpret_cast<void*>(&mma_f32_16_16_16 ), grid, block,
                       "mma_f32_16_16_16", gops * (16 * 16 * 16 * 2), gbytes);
+        benchmark.run(reinterpret_cast<void*>(&mma_f32_16_16_16 ), grid, block,
+                      "mma_f64_16_16_16", gops * (16 * 16 * 16 * 2), gbytes);
     }
   }
 
