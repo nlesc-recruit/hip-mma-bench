@@ -147,6 +147,32 @@ Benchmark::Benchmark(int argc, const char* argv[]) {
 #endif
 }
 
+// isGfx9 and isGfx11 based on
+// https://github.com/ROCm/rocWMMA/blob/develop/samples/common.hpp
+bool Benchmark::isGfx9() {
+    hipDeviceProp_t mProps;
+    hipGetDeviceProperties(&mProps, *device_);
+
+    std::string deviceName(mProps.gcnArchName);
+
+    return ((deviceName.find("gfx908") != std::string::npos)
+            || (deviceName.find("gfx90a") != std::string::npos)
+            || (deviceName.find("gfx940") != std::string::npos)
+            || (deviceName.find("gfx941") != std::string::npos)
+            || (deviceName.find("gfx942") != std::string::npos));
+}
+
+bool Benchmark::isGfx11() {
+    hipDeviceProp_t mProps;
+    hipGetDeviceProperties(&mProps, *device_);
+
+    std::string deviceName(mProps.gcnArchName);
+
+    return ((deviceName.find("gfx1100") != std::string::npos)
+            || (deviceName.find("gfx1101") != std::string::npos)
+            || (deviceName.find("gfx1102") != std::string::npos));
+}
+
 void Benchmark::allocate(size_t bytes) {
   cu::HostMemory h_data(bytes);
   d_data_ = std::make_unique<cu::DeviceMemory>(bytes);

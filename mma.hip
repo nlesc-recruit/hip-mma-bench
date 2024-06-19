@@ -1,14 +1,9 @@
 #include "common.h"
 
-__global__ void bmma_b1_8_8_128_xor(void* ptr);
-__global__ void bmma_b1_16_8_256_xor(void* ptr);
-__global__ void bmma_b1_8_8_128_and(void* ptr);
-__global__ void bmma_b1_16_8_256_and(void* ptr);
-__global__ void mma_s4_8_8_32(void* ptr);
 __global__ void mma_s8_16_16_16(void* ptr);
 __global__ void mma_f16_16_16_16(void* ptr);
 __global__ void mma_bf16_16_16_16(void* ptr);
-__global__ void mma_tf32_16_16_8(void* ptr);
+__global__ void mma_f32_16_16_16(void* ptr);
 
 int main(int argc, const char* argv[]) {
   Benchmark benchmark(argc, argv);
@@ -35,16 +30,17 @@ int main(int argc, const char* argv[]) {
 
   // Run benchmark
   for (int i = 0; i < benchmark.nrBenchmarks(); i++) {
-    //benchmark.run(reinterpret_cast<void*>(&mma_s4_8_8_32), grid, block,
-    //              "mma_s4_8_8_32", gops * (8 * 8 * 32 * 2), gbytes);
     benchmark.run(reinterpret_cast<void*>(&mma_s8_16_16_16), grid, block,
                   "mma_s8_16_16_16", gops * (16 * 16 * 16 * 2), gbytes);
     benchmark.run(reinterpret_cast<void*>(&mma_f16_16_16_16), grid, block,
                   "mma_f16_16_16_16", gops * (16 * 16 * 16 * 2), gbytes);
     benchmark.run(reinterpret_cast<void*>(&mma_bf16_16_16_16), grid, block,
                   "mma_bf16_16_16_16", gops * (16 * 16 * 16 * 2), gbytes);
-    //benchmark.run(reinterpret_cast<void*>(&mma_tf32_16_16_8), grid, block,
-    //              "mma_tf32_16_16_8", gops * (16 * 16 * 8 * 2), gbytes);
+    // F32 is only available on CDNA (gfx9)
+    if (benchmark.isGfx9()) {
+        benchmark.run(reinterpret_cast<void*>(&mma_f32_16_16_16 ), grid, block,
+                      "mma_f32_16_16_16", gops * (16 * 16 * 16 * 2), gbytes);
+    }
   }
 
   return EXIT_SUCCESS;

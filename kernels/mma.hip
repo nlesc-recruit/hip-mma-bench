@@ -32,10 +32,6 @@ __device__ void mma_kernel_ptx(Tout* data) {
   END
 }
 
-//__global__ void mma_s4_8_8_32(void* data) {
-//  mma_kernel_ptx<experimental::precision::s4, int, 8, 8, 32>((int*)data);
-//}
-
 __global__ void mma_s8_16_16_16(void* data) {
   mma_kernel<signed char, int, 16, 16, 16>((int*)data);
 }
@@ -48,6 +44,6 @@ __global__ void mma_bf16_16_16_16(void* data) {
   mma_kernel<hip_bfloat16, float, 16, 16, 16>((float*)data);
 }
 
-//__global__ void mma_tf32_16_16_8(void* data) {
-//  mma_kernel<precision::tf32, float, 16, 16, 8>((float*)data);
-//}
+__global__ void mma_f32_16_16_16(void* data) {
+ mma_kernel<float, float, 16, 16, 16>((float*)data);
+}
