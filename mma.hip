@@ -1,5 +1,6 @@
 #include "common.h"
 
+__global__ void mma_s4_16_16_16(void *ptr);
 __global__ void mma_s8_16_16_16(void* ptr);
 __global__ void mma_f16_16_16_16(void* ptr);
 __global__ void mma_bf16_16_16_16(void* ptr);
@@ -31,6 +32,8 @@ int main(int argc, const char* argv[]) {
 
   // Run benchmark
   for (int i = 0; i < benchmark.nrBenchmarks(); i++) {
+    benchmark.run(reinterpret_cast<void*>(&mma_s4_16_16_16), grid, block,
+                  "mma_s4_16_16_16", gops * (16 * 16 * 16 * 2), gbytes);
     benchmark.run(reinterpret_cast<void*>(&mma_s8_16_16_16), grid, block,
                   "mma_s8_16_16_16", gops * (16 * 16 * 16 * 2), gbytes);
     benchmark.run(reinterpret_cast<void*>(&mma_f16_16_16_16), grid, block,

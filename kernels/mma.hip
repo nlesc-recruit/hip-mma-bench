@@ -1,6 +1,8 @@
 #include <hip/hip_runtime.h>
 #include <rocwmma/rocwmma.hpp>
 
+#include "precision.hpp"
+
 using namespace rocwmma;
 
 #define REPEAT_COUNT 32768
@@ -25,11 +27,17 @@ __device__ void mma_kernel(Tout* data) {
   END
 }
 
+#include "mma_m16n16k16_s32s4s4s32.hpp"
+
 template <typename Tin, typename Tout, unsigned M, unsigned N, unsigned K>
-__device__ void mma_kernel_ptx(Tout* data) {
+__device__ void mma_kernel_llvm(Tout *data) {
   START
-  mma_sync_ptx(sum, aFrag, bFrag, sum);
+  mma_sync_llvm(sum, aFrag, bFrag, sum);
   END
+}
+
+__global__ void mma_s4_16_16_16(void* data) {
+  mma_kernel_llvm<int4_t, int, 16, 16, 16>((int*)data);
 }
 
 __global__ void mma_s8_16_16_16(void* data) {
