@@ -38,8 +38,11 @@ inline __device__ void mma_sync_llvm(
   const size_t K = 32;
   const size_t output_elements_per_thread = M * N / 64; // wave size 64 assumed
 
-  size_t mk = threadIdx.y + K * threadIdx.x;
-  size_t kn = threadIdx.x + N * threadIdx.y;
+  size_t tid_x = threadIdx.x % 64;
+  size_t tid_y = threadIdx.x / 64;
+
+  size_t mk = tid_y + K * tix_x;
+  size_t kn = tid_x + N * tid_y;
 
   long amk = a.regs.data[mk];
   long bkn = b.regs.data[kn];
@@ -50,7 +53,7 @@ inline __device__ void mma_sync_llvm(
 #endif
 
   for (size_t i = 0; i < output_elements_per_thread; i++) {
-    const int idx = threadIdx.x + i * N + threadIdx.y * 4 * N;
+    const int idx = tid_x + i * N + tid_y * output_elements_per_thread * N;
     (*d).data[idx] = dmn.data[i];
   }
 }
