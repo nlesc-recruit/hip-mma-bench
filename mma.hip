@@ -1,5 +1,6 @@
 #include "common.h"
 
+__global__ void mma_fp8_16_16_32(void* ptr);
 __global__ void mma_s8_16_16_16(void* ptr);
 __global__ void mma_f16_16_16_16(void* ptr);
 __global__ void mma_bf16_16_16_16(void* ptr);
@@ -47,6 +48,11 @@ int main(int argc, const char* argv[]) {
     if (benchmark.isCDNA2() || benchmark.isCDNA3()) {
         benchmark.run(reinterpret_cast<void*>(&mma_f64_16_16_16 ), grid, block,
                       "mma_f64_16_16_16", gops * (16 * 16 * 16 * 2), gbytes);
+    }
+    // FP8 / BF8 are only available on CDNA3
+    if (benchmark.isCDNA3()) {
+        benchmark.run(reinterpret_cast<void*>(&mma_fp8_16_16_32 ), grid, block,
+                      "mma_fp8_16_16_32", gops * (16 * 16 * 32 * 2), gbytes);
     }
   }
 
