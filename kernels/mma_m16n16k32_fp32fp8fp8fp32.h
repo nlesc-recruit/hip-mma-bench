@@ -37,10 +37,10 @@ inline __device__ void mma_sync_llvm(
   const size_t M = 16;
   const size_t N = 16;
   const size_t K = 32;
-  const size_t output_elements_per_thread = M * N / 64; // wave size 64 assumed
+  const size_t output_elements_per_thread = M * N / __AMDGCN_WAVEFRONT_SIZE__;
 
-  size_t tid_x = threadIdx.x % 64;
-  size_t tid_y = threadIdx.x / 64;
+  size_t tid_x = threadIdx.x % __AMDGCN_WAVEFRONT_SIZE__;
+  size_t tid_y = threadIdx.x / __AMDGCN_WAVEFRONT_SIZE__;
 
   size_t mk = tid_y + K * tix_x;
   size_t kn = tid_x + N * tid_y;
