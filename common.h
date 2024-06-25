@@ -27,8 +27,10 @@ class Benchmark {
  public:
   Benchmark(int argc, const char* argv[]);
 
-  bool isGfx9();
-  bool isGfx11();
+  bool isCDNA();
+  bool isCDNA2();
+  bool isCDNA3();
+  bool isRDNA3();
   void allocate(size_t bytes);
   void run(void* kernel, dim3 grid, dim3 block, const char* name,
            double gops = 0, double gbytes = 0);

@@ -38,10 +38,13 @@ int main(int argc, const char* argv[]) {
                   "mma_f16_16_16_16", gops * (16 * 16 * 16 * 2), gbytes);
     benchmark.run(reinterpret_cast<void*>(&mma_bf16_16_16_16), grid, block,
                   "mma_bf16_16_16_16", gops * (16 * 16 * 16 * 2), gbytes);
-    // F32 and F64 are only available on CDNA (gfx9)
-    if (benchmark.isGfx9()) {
+    // F32 is only available on CDNA
+    if (benchmark.isCDNA()) {
         benchmark.run(reinterpret_cast<void*>(&mma_f32_16_16_16 ), grid, block,
                       "mma_f32_16_16_16", gops * (16 * 16 * 16 * 2), gbytes);
+    }
+    // F64 is only available on CDNA2+
+    if (benchmark.isCDNA2() || benchmark.isCDNA3()) {
         benchmark.run(reinterpret_cast<void*>(&mma_f64_16_16_16 ), grid, block,
                       "mma_f64_16_16_16", gops * (16 * 16 * 16 * 2), gbytes);
     }

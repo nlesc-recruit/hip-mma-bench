@@ -141,9 +141,9 @@ Benchmark::Benchmark(int argc, const char* argv[]) {
   // Print HIP device information
   std::cout << "Device " << device_number << ": " << device_->getName();
   std::cout << " (" << multiProcessorCount();
-  if (isGfx9())
+  if (isCDNA())
     std::cout << "CUs, ";
-  else if (isGfx11())
+  else if (isRDNA3())
     std::cout << "WGPs, ";
   else
     std::cout << "units, ";
@@ -154,22 +154,42 @@ Benchmark::Benchmark(int argc, const char* argv[]) {
 #endif
 }
 
-// isGfx9 and isGfx11 based on
+// architecture checking code based on
 // https://github.com/ROCm/rocWMMA/blob/develop/samples/common.hpp
-bool Benchmark::isGfx9() {
+bool Benchmark::isCDNA1() {
     hipDeviceProp_t mProps;
     hipGetDeviceProperties(&mProps, *device_);
 
     std::string deviceName(mProps.gcnArchName);
 
-    return ((deviceName.find("gfx908") != std::string::npos)
-            || (deviceName.find("gfx90a") != std::string::npos)
-            || (deviceName.find("gfx940") != std::string::npos)
+    return (deviceName.find("gfx908") != std::string::npos);
+}
+
+bool Benchmark::isCDNA2() {
+    hipDeviceProp_t mProps;
+    hipGetDeviceProperties(&mProps, *device_);
+
+    std::string deviceName(mProps.gcnArchName);
+
+    return (deviceName.find("gfx90a") != std::string::npos);
+}
+
+bool Benchmark::isCDNA3() {
+    hipDeviceProp_t mProps;
+    hipGetDeviceProperties(&mProps, *device_);
+
+    std::string deviceName(mProps.gcnArchName);
+
+    return ((deviceName.find("gfx940") != std::string::npos)
             || (deviceName.find("gfx941") != std::string::npos)
             || (deviceName.find("gfx942") != std::string::npos));
 }
 
-bool Benchmark::isGfx11() {
+bool Benchmark::isCDNA() {
+    return (isCDNA1() || isCDNA2() || isCDNA3());
+}
+
+bool Benchmark::isRDNA3() {
     hipDeviceProp_t mProps;
     hipGetDeviceProperties(&mProps, *device_);
 
