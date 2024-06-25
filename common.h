@@ -37,6 +37,7 @@ class Benchmark {
   int clockRate();
   int maxThreadsPerBlock();
   size_t totalGlobalMem();
+  unsigned warpSize();
 
   unsigned nrBenchmarks() { return nr_benchmarks_; }
   unsigned nrIterations() { return nr_iterations_; }

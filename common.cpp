@@ -8,6 +8,7 @@
 #define CU_DEVICE_ATTRIBUTE_MULTIPROCESSOR_COUNT hipDeviceAttributeMultiprocessorCount
 #define CU_DEVICE_ATTRIBUTE_CLOCK_RATE hipDeviceAttributeClockRate
 #define CU_DEVICE_ATTRIBUTE_MAX_THREADS_PER_BLOCK hipDeviceAttributeMaxThreadsPerBlock
+#define CU_DEVICE_ATTRIBUTE_WARP_SIZE hipDeviceAttributeWarpSize
 #define CUdeviceptr hipDeviceptr_t
 
 static constexpr int w1 = 20;
@@ -203,6 +204,10 @@ int Benchmark::clockRate() {
 
 int Benchmark::maxThreadsPerBlock() {
   return device_->getAttribute(CU_DEVICE_ATTRIBUTE_MAX_THREADS_PER_BLOCK);
+}
+
+unsigned Benchmark::warpSize() {
+  return device_->getAttribute(CU_DEVICE_ATTRIBUTE_WARP_SIZE);
 }
 
 size_t Benchmark::totalGlobalMem() { return context_->getTotalMemory(); }
