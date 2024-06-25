@@ -26,6 +26,7 @@ __device__ void fill_fragment(fragment<MatrixT, 16, 16, 32, precision::fp8, Data
   }
 }
 
+// MFMA compiler intrinsic syntax:
 // https://gpuopen.com/learn/amd-lab-notes/amd-lab-notes-matrix-cores-readme/#mfma-compiler-intrinsic-syntax
 inline __device__ void mma_sync_llvm(
   fragment<accumulator, 16, 16, 32, float>& d,
