@@ -42,13 +42,13 @@ inline __device__ void mma_sync_llvm(
   size_t tid_x = threadIdx.x % __AMDGCN_WAVEFRONT_SIZE__;
   size_t tid_y = threadIdx.x / __AMDGCN_WAVEFRONT_SIZE__;
 
-  size_t mk = tid_y + K * tix_x;
+  size_t mk = tid_y + K * tid_x;
   size_t kn = tid_x + N * tid_y;
 
   long amk = a.regs.data[mk];
   long bkn = b.regs.data[kn];
   VecT<float, 4> dmn;
-  VecT<float, 4> cmn; // todo: what to put for C here?
+  VecT<float, 4> cmn{0, 0, 0, 0}; // todo: what to put for C here?
 #if __gfx940__ || __gfx941__ || __gfx942__
   dmn.data = __builtin_amdgcn_mfma_f32_16x16x32_fp8_fp8(amk, bkn, cmn.data, 0, 0, 0);
 #endif
