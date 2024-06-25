@@ -28,6 +28,7 @@ class Benchmark {
   Benchmark(int argc, const char* argv[]);
 
   bool isCDNA();
+  bool isCDNA1();
   bool isCDNA2();
   bool isCDNA3();
   bool isRDNA3();
