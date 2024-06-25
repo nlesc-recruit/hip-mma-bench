@@ -4,9 +4,16 @@ project(hip-mma-bench LANGUAGES CXX HIP)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TYPE Release)
 
-set(CMAKE_HIP_ARCHITECTURES
-    "gfx1101"
-    CACHE STRING "HIP architecture")
+# default GPU support
+# W7700 = gfx1101
+# 7900XT = gfx1100
+# MI210 = gfx90a
+# MI300X = gfx940
+if(NOT CMAKE_HIP_ARCHITECTURES)
+  set(CMAKE_HIP_ARCHITECTURES
+      "gfx1101,gfx1100,gfx90a,gfx940"
+      CACHE STRING "HIP architecture")
+endif()
 
 find_package(hip REQUIRED)
 
