@@ -41,7 +41,7 @@ int main(int argc, const char* argv[]) {
     if (benchmark.isGfx9()) {
         benchmark.run(reinterpret_cast<void*>(&mma_f32_16_16_16 ), grid, block,
                       "mma_f32_16_16_16", gops * (16 * 16 * 16 * 2), gbytes);
-        benchmark.run(reinterpret_cast<void*>(&mma_f32_16_16_16 ), grid, block,
+        benchmark.run(reinterpret_cast<void*>(&mma_f64_16_16_16 ), grid, block,
                       "mma_f64_16_16_16", gops * (16 * 16 * 16 * 2), gbytes);
     }
   }
