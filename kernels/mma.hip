@@ -9,8 +9,8 @@ using namespace rocwmma;
 
 #define START                                        \
   fragment<accumulator, M, N, K, Tout> sum;          \
-  fragment<matrix_a, M, N, K, Tc, row_major> aFrag; \
-  fragment<matrix_b, M, N, K, Tc, col_major> bFrag; \
+  fragment<matrix_a, M, N, K, Tmma, row_major> aFrag; \
+  fragment<matrix_b, M, N, K, Tmma, col_major> bFrag; \
   fill_fragment(sum, static_cast<Tout>(0));          \
   fill_fragment(aFrag, static_cast<Tin>(0));         \
   fill_fragment(bFrag, static_cast<Tin>(0));         \
@@ -20,7 +20,7 @@ using namespace rocwmma;
   Tout* ptr = &data[threadIdx.y * M * N]; \
   store_matrix_sync(ptr, sum, N, mem_row_major);
 
-template <typename Tin, typename Tc, typename Tout, unsigned M, unsigned N, unsigned K>
+template <typename Tin, typename Tmma, typename Tout, unsigned M, unsigned N, unsigned K>
 __device__ void mma_kernel(Tout* data) {
   START
   mma_sync(sum, aFrag, bFrag, sum);
@@ -29,7 +29,7 @@ __device__ void mma_kernel(Tout* data) {
 
 #include "mma_m16n16k32_fp32fp8fp8fp32.h"
 
-template <typename Tin, typename Tc, typename Tout, unsigned M, unsigned N, unsigned K>
+template <typename Tin, typename Tmma, typename Tout, unsigned M, unsigned N, unsigned K>
 __device__ void mma_kernel_llvm(Tout* data) {
   START
   mma_sync_llvm(sum, aFrag, bFrag, sum);
