@@ -118,11 +118,11 @@ __device__ void custom_load_matrix_sync(custom_fragment<matrix_a, 16, 16, 16, si
     // A i: (lane % 16)
     // A k: 4 * GPR_num + floor(GPR_bits / 8)
     unsigned i = threadIdx.x % 16;
-    const unsigned elements_per_register = 4;  // 4 chars in one 32-bit register
+    const unsigned epr = 4;  // 4 elements per register (4 chars in one 32-bit register)
     for (size_t reg = 0; reg < frag.num_elements; reg++) {
         frag.regs.data[reg] = 0;
-        for (size_t ele = 0; ele < elements_per_register; ele++) {
-            unsigned k = 4 * reg + ele;
+        for (size_t ele = 0; ele < epr; ele++) {
+            unsigned k = epr * reg + ele;
             signed char value = ptr[i * lda + k];
             frag.regs.data[reg] |= value << (8 * ele);
         }
@@ -133,11 +133,11 @@ __device__ void custom_load_matrix_sync(custom_fragment<matrix_b, 16, 16, 16, si
     // B j: (lane % 16)
     // B k: 4 * GPR_num + floor(GPR_bits / 8)
     unsigned j = threadIdx.x % 16;
-    const unsigned elements_per_register = 4;  // 4 chars in one 32-bit register
+    const unsigned epr = 4;  // 4 elements per register (4 chars in one 32-bit register)s
     for (size_t reg = 0; reg < frag.num_elements; reg++) {
         frag.regs.data[reg] = 0;
-        for (size_t ele = 0; ele < elements_per_register; ele++) {
-            unsigned k = 4 * reg + ele;
+        for (size_t ele = 0; ele < epr; ele++) {
+            unsigned k = epr * reg + ele;
             signed char value = ptr[j * lda + k];
             frag.regs.data[reg] |= value << (8 * ele);
         }
