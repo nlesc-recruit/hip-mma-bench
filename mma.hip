@@ -1,6 +1,7 @@
 #include "common.h"
 
 __global__ void mma_fp8_16_16_32(void* ptr);
+__global__ void mma_bf8_16_16_32(void* ptr);
 __global__ void mma_s8_16_16_32(void* ptr);
 __global__ void mma_f16_16_16_16(void* ptr);
 __global__ void mma_bf16_16_16_16(void* ptr);
