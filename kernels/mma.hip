@@ -40,8 +40,8 @@ __global__ void mma_fp8_16_16_32(void* data) {
   mma_kernel_llvm<float, precision::fp8, float, 16, 16, 32>((float*)data);
 }
 
-__global__ void mma_s8_16_16_16(void* data) {
-  mma_kernel<signed char, signed char, int, 16, 16, 16>((int*)data);
+__global__ void mma_s8_16_16_32(void* data) {
+  mma_kernel<signed char, signed char, int, 16, 16, 32>((int*)data);
 }
 
 __global__ void mma_f16_16_16_16(void* data) {
