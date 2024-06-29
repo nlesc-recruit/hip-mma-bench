@@ -20,10 +20,10 @@ class __align__(4) fragment<matrix_b, 16, 16, 32, precision::fp8, col_major> {
 };
 
 template<typename MatrixT, typename DataLayout>
-__device__ void fill_fragment(fragment<MatrixT, 16, 16, 32, precision::fp8, DataLayout>& frag, float value) {
-  for (size_t i = 0; i < frag.num_elements; i++) {
-    frag.regs.data[i] = value;
-  }
+__device__ void fill_fragment(fragment<MatrixT, 16, 16, 32, precision::fp8, DataLayout>& frag, const char value) {
+    for (size_t i = 0; i < frag.num_elements; i++) {
+        frag.regs.data[i] = value | (value << 8) | (value << 16) | (value << 24);
+    }
 }
 
 // MFMA compiler intrinsic syntax:
@@ -34,27 +34,7 @@ inline __device__ void mma_sync_llvm(
   const fragment<matrix_b, 16, 16, 32, precision::fp8, col_major>& b,
   const fragment<accumulator, 16, 16, 32, float>& c) {
 
-  const size_t M = 16;
-  const size_t N = 16;
-  const size_t K = 32;
-  const size_t output_elements_per_thread = M * N / __AMDGCN_WAVEFRONT_SIZE__;
-
-  size_t tid_x = threadIdx.x % __AMDGCN_WAVEFRONT_SIZE__;
-  size_t tid_y = threadIdx.x / __AMDGCN_WAVEFRONT_SIZE__;
-
-  size_t mk = tid_y + K * tid_x;
-  size_t kn = tid_x + N * tid_y;
-
-  long amk = a.regs.data[mk];
-  long bkn = b.regs.data[kn];
-  VecT<float, 4> dmn;
-  VecT<float, 4> cmn{0, 0, 0, 0}; // todo: what to put for C here?
 #if __gfx940__ || __gfx941__ || __gfx942__
-  dmn.data = __builtin_amdgcn_mfma_f32_16x16x32_fp8_fp8(amk, bkn, cmn.data, 0, 0, 0);
+  (*d).data = __builtin_amdgcn_mfma_f32_16x16x32_fp8_fp8(((VRegI64x1 const&)(a.regs)).data[0], ((VRegI64x1 const&)(b.regs)).data[0], (*c).data, 0, 0, 0);
 #endif
-
-  for (size_t i = 0; i < output_elements_per_thread; i++) {
-    const int idx = tid_x + i * N + tid_y * output_elements_per_thread * N;
-    (*d).data[idx] = dmn.data[i];
-  }
 }
