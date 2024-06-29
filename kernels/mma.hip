@@ -38,11 +38,11 @@ __device__ void mma_kernel_llvm(Tout* data) {
 }
 
 __global__ void mma_fp8_16_16_32(void* data) {
-  mma_kernel_llvm<char, precision::fp8, float, 16, 16, 32>((char*)data);
+  mma_kernel_llvm<char, precision::fp8, float, 16, 16, 32>((float*)data);
 }
 
 __global__ void mma_bf8_16_16_32(void* data) {
-  mma_kernel_llvm<char, precision::bf8, float, 16, 16, 32>((char*)data);
+  mma_kernel_llvm<char, precision::bf8, float, 16, 16, 32>((float*)data);
 }
 
 __global__ void mma_s8_16_16_32(void* data) {
