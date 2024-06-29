@@ -53,6 +53,8 @@ int main(int argc, const char* argv[]) {
     if (benchmark.isCDNA3()) {
         benchmark.run(reinterpret_cast<void*>(&mma_fp8_16_16_32 ), grid, block,
                       "mma_fp8_16_16_32", gops * (16 * 16 * 32 * 2), gbytes);
+        benchmark.run(reinterpret_cast<void*>(&mma_bf8_16_16_32 ), grid, block,
+                      "mma_bf8_16_16_32", gops * (16 * 16 * 32 * 2), gbytes);
     }
   }
 

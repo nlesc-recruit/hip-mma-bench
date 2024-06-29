@@ -28,6 +28,7 @@ __device__ void mma_kernel(Tout* data) {
 }
 
 #include "mma_m16n16k32_fp32fp8fp8fp32.h"
+#include "mma_m16n16k32_fp32bf8bf8fp32.h"
 
 template <typename Tin, typename Tmma, typename Tout, unsigned M, unsigned N, unsigned K>
 __device__ void mma_kernel_llvm(Tout* data) {
@@ -37,7 +38,11 @@ __device__ void mma_kernel_llvm(Tout* data) {
 }
 
 __global__ void mma_fp8_16_16_32(void* data) {
-  mma_kernel_llvm<float, precision::fp8, float, 16, 16, 32>((float*)data);
+  mma_kernel_llvm<char, precision::fp8, float, 16, 16, 32>((char*)data);
+}
+
+__global__ void mma_bf8_16_16_32(void* data) {
+  mma_kernel_llvm<char, precision::bf8, float, 16, 16, 32>((char*)data);
 }
 
 __global__ void mma_s8_16_16_32(void* data) {
