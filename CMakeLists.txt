@@ -17,6 +17,8 @@ endif()
 
 find_package(hip REQUIRED)
 
+find_package(rocwmma REQUIRED)
+
 include(FetchContent)
 
 FetchContent_Declare(
