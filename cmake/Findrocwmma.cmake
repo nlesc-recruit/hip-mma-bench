@@ -2,8 +2,7 @@ include(FindPackageHandleStandardArgs)
 
 find_path(
   ROCWMMA_INCLUDE_DIR
-  NAMES rocwmma/rocwmma.hpp
-  PATHS /usr/local/include /usr/include)
+  NAMES rocwmma/rocwmma.hpp)
 
 find_package_handle_standard_args(
   rocwmma
