@@ -15,7 +15,11 @@ if(NOT CMAKE_HIP_ARCHITECTURES)
       CACHE STRING "HIP architecture")
 endif()
 
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
+
 find_package(hip REQUIRED)
+
+find_package(rocwmma REQUIRED)
 
 include(FetchContent)
 
