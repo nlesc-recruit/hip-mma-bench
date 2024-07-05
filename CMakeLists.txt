@@ -37,6 +37,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(cudawrappers)
 
 option(BUILD_WITH_PMT "Build with Power Measurement Toolkit support" OFF)
+option(BUILD_WITH_FMT "Build with Frequency Measurement Toolkit support" OFF)
 option(BUILD_KERNEL_DEBUG "Build HIP kernels in debug mode")
 
 if(BUILD_WITH_PMT)
@@ -46,6 +47,16 @@ if(BUILD_WITH_PMT)
   add_compile_definitions("HAVE_PMT")
 endif()
 
+if(BUILD_WITH_FMT)
+  set(FMT_BUILD_AMD ON)
+  FetchContent_Declare(
+    fmt
+    GIT_REPOSITORY https://git.astron.nl/RD/fmt
+    GIT_TAG main)
+  FetchContent_MakeAvailable(fmt)
+  add_compile_definitions("HAVE_FMT")
+endif()
+
 file(GLOB HIP_SOURCES *.hip)
 list(REMOVE_ITEM HIP_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/common.hip)
 
@@ -53,6 +64,9 @@ add_library(common OBJECT common.cpp common.hip)
 target_link_libraries(common cxxopts cudawrappers::cu)
 if(BUILD_WITH_PMT)
   target_link_libraries(common pmt)
+endif()
+if(BUILD_WITH_FMT)
+  target_link_libraries(common fmt)
 endif()
 
 foreach(source_file ${HIP_SOURCES})

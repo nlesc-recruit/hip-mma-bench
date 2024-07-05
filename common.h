@@ -10,13 +10,18 @@
 #include <pmt.h>
 #endif
 
+#if defined(HAVE_FMT)
+#include <fmt/fmt.h>
+#endif
+
 using namespace std;
 
 unsigned roundToPowOf2(unsigned number);
 
 typedef struct {
-  double runtime;  // milliseconds
-  double power;    // watts
+  double runtime; // milliseconds
+  double power;   // watts
+  int frequency;  // MHz
 } measurement;
 
 // Function to report kernel performance
@@ -44,14 +49,26 @@ class Benchmark {
 
   unsigned nrBenchmarks() { return nr_benchmarks_; }
   unsigned nrIterations() { return nr_iterations_; }
-#if defined(HAVE_PMT)
+#if defined(HAVE_PMT) || defined(HAVE_FMT)
   unsigned benchmarkDuration() { return benchmark_duration_; }
-  bool measurePower() { return measure_power_; }
+#endif
+#if defined(HAVE_PMT) || defined(HAVE_FMT)
+  bool measureContinuous() {
+    bool result = false;
+#if defined(HAVE_PMT)
+    result |= measure_power_;
+#endif
+#if defined(HAVE_FMT)
+    result |= measure_frequency_;
+#endif
+    return result;
+  }
 #endif
 
  protected:
   measurement run_kernel(void* kernel, dim3 grid, dim3 block);
 
+  unsigned device_number_;
   unsigned nr_benchmarks_;
   unsigned nr_iterations_;
   std::unique_ptr<cu::Device> device_;
@@ -61,6 +78,11 @@ class Benchmark {
 #if defined(HAVE_PMT)
   std::shared_ptr<pmt::PMT> pm_;
   bool measure_power_;
+#endif
+#if defined(HAVE_FMT)
+  bool measure_frequency_;
+#endif
+#if defined(HAVE_FMT) || defined(HAVE_FMT)
   unsigned benchmark_duration_;
 #endif
 };
