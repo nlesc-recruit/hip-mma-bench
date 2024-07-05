@@ -329,5 +329,6 @@ measurement Benchmark::run_kernel(void* kernel, dim3 grid, dim3 block) {
   measurement measurement;
   measurement.runtime = milliseconds / nrIterations();
   measurement.power = 0;
+  measurement.frequency = 0;
   return measurement;
 }
