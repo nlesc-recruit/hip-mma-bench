@@ -29,11 +29,11 @@ FetchContent_Declare(
   GIT_TAG v3.2.0)
 FetchContent_MakeAvailable(cxxopts)
 
-include(FetchContent)
+set(CUDAWRAPPERS_BACKEND "HIP")
 FetchContent_Declare(
   cudawrappers
   GIT_REPOSITORY https://github.com/nlesc-recruit/cudawrappers
-  GIT_TAG hipified)
+  GIT_TAG main)
 FetchContent_MakeAvailable(cudawrappers)
 
 option(BUILD_WITH_PMT "Build with Power Measurement Toolkit support" OFF)
@@ -50,6 +50,7 @@ file(GLOB HIP_SOURCES *.hip)
 list(REMOVE_ITEM HIP_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/common.hip)
 
 add_library(common OBJECT common.cpp common.hip)
+set_source_files_properties(common.cpp PROPERTIES LANGUAGE HIP)
 target_link_libraries(common cxxopts cudawrappers::cu)
 if(BUILD_WITH_PMT)
   target_link_libraries(common pmt)
