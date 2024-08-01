@@ -157,29 +157,17 @@ Benchmark::Benchmark(int argc, const char* argv[]) {
 // architecture checking code based on
 // https://github.com/ROCm/rocWMMA/blob/develop/samples/common.hpp
 bool Benchmark::isCDNA1() {
-    hipDeviceProp_t mProps;
-    hipGetDeviceProperties(&mProps, *device_);
-
-    std::string deviceName(mProps.gcnArchName);
-
+    std::string deviceName(device_->getArch());
     return (deviceName.find("gfx908") != std::string::npos);
 }
 
 bool Benchmark::isCDNA2() {
-    hipDeviceProp_t mProps;
-    hipGetDeviceProperties(&mProps, *device_);
-
-    std::string deviceName(mProps.gcnArchName);
-
+    std::string deviceName(device_->getArch());
     return (deviceName.find("gfx90a") != std::string::npos);
 }
 
 bool Benchmark::isCDNA3() {
-    hipDeviceProp_t mProps;
-    hipGetDeviceProperties(&mProps, *device_);
-
-    std::string deviceName(mProps.gcnArchName);
-
+    std::string deviceName(device_->getArch());
     return ((deviceName.find("gfx940") != std::string::npos)
             || (deviceName.find("gfx941") != std::string::npos)
             || (deviceName.find("gfx942") != std::string::npos));
@@ -190,11 +178,7 @@ bool Benchmark::isCDNA() {
 }
 
 bool Benchmark::isRDNA3() {
-    hipDeviceProp_t mProps;
-    hipGetDeviceProperties(&mProps, *device_);
-
-    std::string deviceName(mProps.gcnArchName);
-
+    std::string deviceName(device_->getArch());
     return ((deviceName.find("gfx1100") != std::string::npos)
             || (deviceName.find("gfx1101") != std::string::npos)
             || (deviceName.find("gfx1102") != std::string::npos));
